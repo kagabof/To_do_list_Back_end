@@ -1,56 +1,60 @@
+/* eslint-disable consistent-return */
 import model from '../models';
 import {
-    checkUserExist,
-    validates
+  checkUserExist,
+  validates,
 } from '../helpers/signupValidations';
 import { hashPasword, comparePassword } from '../helpers/hash';
 
-const {Users, Todo} = model;
+const { Users, Todo } = model;
 
 const signupResolver = async (parent, args) => {
-    if(validates(args)) {
-        const check = await checkUserExist(args.email);
-        const hash = await hashPasword(args.password);
-        console.log('????>', hash);
-        if(check === false){
-            const data = Users.create({
-                name: args.name,
-                email: args.email,
-                age: args.age,
-                role: args.role,
-                password: hash,
-            });
-
-            if(!data){
-                return new Error('No data found!');
-            }
-            return data;
-        }
-        return new Error(`The user with ${args.email} exist!`);
+  if (!validates(args).check) {
+    throw new Error('Name, age and email must be complited');
+  } else {
+    const check = await checkUserExist(args.email);
+    if (check) {
+      throw new Error(`Email ${args.email} exits in the system!`);
     }
-    return new Error('Name, age and email must be complited');
+    const hash = await hashPasword(args.password);
+
+    if (!check) {
+      const data = Users.create({
+        name: args.name,
+        email: args.email,
+        age: args.age,
+        role: args.role,
+        password: hash,
+        image_url: args.image_url,
+        image_secure_url: args.image_secure_url,
+      });
+
+      if (!data) {
+        throw new Error('No data found!');
+      }
+      return data;
+    }
+  }
 };
 
-const getUserByIdResolver = (parent, args) => {
-    const users = Users.findOne({where: {id: args.id}})
-
-    if(!users){
-        throw new Error('Error');
-    }
-    return users;
+const getUserByIdResolver = async (parent, args) => {
+  const users = await Users.findByPk(args.id);
+  if (!users) {
+    throw new Error('No user found');
+  }
+  return users;
 };
 
-const getAllUsersResolver = (parent, args) => {
-    const users = Users.findAll();
-    if(!users){
-        throw new Error('Error');
-    }
-    return users;
-
-}
+const getAllUsersResolver = async () => {
+  const users = await Users.findAll();
+  if (!users.length) {
+    throw new Error('No user found');
+  }
+  return users;
+};
 
 export {
-    signupResolver,
-    getUserByIdResolver,
-    getAllUsersResolver,
-}
+  signupResolver,
+  getUserByIdResolver,
+  getAllUsersResolver,
+};
