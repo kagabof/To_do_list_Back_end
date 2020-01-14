@@ -4,9 +4,9 @@ import {
   checkUserExist,
   validates,
 } from '../helpers/signupValidations';
-import { hashPasword, comparePassword } from '../helpers/hash';
+import { hashPasword } from '../helpers/hash';
 
-const { Users, Todo } = model;
+const { Users } = model;
 
 const signupResolver = async (parent, args) => {
   if (!validates(args).check) {
