@@ -1,97 +1,78 @@
-const graphql = require('graphql')
-import model from '../models';
+import {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLSchema,
+  GraphQLID,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+} from 'graphql';
+import {
+  signupResolver,
+  getUserByIdResolver,
+  getAllUsersResolver,
+} from '../resolvers/UserResolver';
 
-const {Users} = model
-const {
-    GraphQLObjectType,
-    GraphQLString,
-    GraphQLSchema,
-    GraphQLID,
-    GraphQLInt,
-    GraphQLList,
-    GraphQLNonNull,
-    GraphQL
-} = graphql;
 
 const UserType = new GraphQLObjectType({
-    name: 'User',
-    fields: () => ({
-        id: {type: GraphQLID},
-        name: {type: GraphQLString},
-        email: {type: GraphQLString },
-        age: {type: GraphQLInt},
-        role: {type: GraphQLString},
-        createdAt: {type: GraphQLString},
-        updatedAt: {type: GraphQLString}
-    })
-    }
-);
+  name: 'User',
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    email: { type: GraphQLString },
+    age: { type: GraphQLInt },
+    password: { type: GraphQLString },
+    role: { type: GraphQLString },
+    image_url: { type: GraphQLString },
+    image_secure_url: { type: GraphQLString },
+    createdAt: { type: GraphQLString },
+    updatedAt: { type: GraphQLString },
+  }),
+});
 
 const RootQuery = new GraphQLObjectType({
-    name: 'Query',
-    fields: () => ({
-        User: {
-            type: UserType,
-            args: {
-                id: {type: GraphQLID}
-            },
-            resolve(parent, args){
-                const User = [];
-                console.log('>>>>> display');
-                const users = Users.findOne({where: {id: args.id}})
-
-                if(!users){
-                    throw new Error('Error');
-                }
-                return users;
-            }
-        },
-        Users: {
-            type: new GraphQLList(UserType),
-            resolve(parent, arges){
-                const users = Users.findAll();
-                if(!users){
-                    throw new Error('Error');
-                }
-
-                return users;
-
-            }
-        }
-    })
+  name: 'Query',
+  fields: () => ({
+    User: {
+      type: UserType,
+      args: {
+        id: { type: GraphQLID },
+      },
+      resolve(parent, args) {
+        return getUserByIdResolver(parent, args);
+      },
+    },
+    Users: {
+      type: new GraphQLList(UserType),
+      resolve(parent, args) {
+        return getAllUsersResolver(parent, args);
+      },
+    },
+  }),
 });
 
 const Mutation = new GraphQLObjectType({
-    name: "Mutation",
-    fields:{
-        CreateUser: {
-            type: UserType,
-            args: {
-                name: {type: GraphQLString},
-                email: {type: GraphQLString},
-                age: {type: GraphQLInt},
-                role: {type: GraphQLString}
-            },
-            resolve(parent, args){
-                console.log('?????',args);
-                const data = Users.create({
-                    name: args.name,
-                    email: args.email,
-                    age: args.age,
-                    role: args.role
-                }).then(data =>{
-                    console.log('>>>>>>>>',data);
-                }).catch(error => {
-                    console.log('>>>>errors', Error);
-                });
-                console.log('?????', data);
-                return data;
-            }
-        }
+  name: 'Mutation',
+  fields: {
+    CreateUser: {
+      type: UserType,
+      args: {
+        name: { type: GraphQLString },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+        age: { type: GraphQLInt },
+        image_url: { type: GraphQLString },
+        image_secure_url: { type: GraphQLString },
+        role: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        return signupResolver(parent, args);
+      },
     },
-})
+  },
+});
 
 module.exports = new GraphQLSchema({
-    query: RootQuery,
-    mutation: Mutation,
-})
+  query: RootQuery,
+  mutation: Mutation,
+});

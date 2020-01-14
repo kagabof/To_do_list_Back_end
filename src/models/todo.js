@@ -1,23 +1,24 @@
-'use strict';
+/* eslint-disable no-unused-vars */
+
 module.exports = (sequelize, DataTypes) => {
   const Todo = sequelize.define('Todo', {
     title: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
     description: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
     location: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
     startTime: {
-      type: DataTypes.TIME
+      type: DataTypes.TIME,
     },
     endTime: {
-      type: DataTypes.TIME
-    }
+      type: DataTypes.TIME,
+    },
   }, {});
-  Todo.associate = function(models) {
+  Todo.associate = function (models) {
     // associations can be defined here
   };
   return Todo;
