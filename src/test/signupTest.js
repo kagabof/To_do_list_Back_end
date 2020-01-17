@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 import chai from 'chai';
 import request from 'supertest';
-import app from '../../app';
+import app from '../app';
 
 
 chai.should();

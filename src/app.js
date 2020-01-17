@@ -3,7 +3,7 @@ import config from 'dotenv';
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import cors from 'cors';
-import schema from './src/schema/schema';
+import schema from './schema/schema';
 
 
 config.config();
@@ -17,7 +17,8 @@ app.use('/', graphqlHTTP({
   graphiql: true,
 }));
 
-app.listen(3000, () => {
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
   console.log('server listen on http://localhost:3000/');
 });
 
