@@ -11,8 +11,17 @@ import {
   signupResolver,
   getUserByIdResolver,
   getAllUsersResolver,
+  signinResolver,
 } from '../resolvers/UserResolver';
 
+
+const AuthPayload = new GraphQLObjectType({
+  name: 'Auth',
+  fields: () => ({
+    name: { type: GraphQLString },
+    token: { type: GraphQLString },
+  }),
+});
 
 const UserType = new GraphQLObjectType({
   name: 'User',
@@ -45,7 +54,17 @@ const RootQuery = new GraphQLObjectType({
     Users: {
       type: new GraphQLList(UserType),
       resolve(parent, args) {
-        return getAllUsersResolver(parent, args);
+        return getAllUsersResolver({ parent, args });
+      },
+    },
+    Signin: {
+      type: AuthPayload,
+      args: {
+        email: { type: GraphQLString },
+        password: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        return signinResolver(parent, args);
       },
     },
   }),

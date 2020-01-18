@@ -10,7 +10,10 @@ const findUserByEmail = async (email) => {
 
 const checkUserExist = async (email) => {
   const user = await findUserByEmail(email);
-  return !!user;
+  return {
+    exist: !!user,
+    User: user || null,
+  };
 };
 const passwordValidation = (password) => {
   const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
