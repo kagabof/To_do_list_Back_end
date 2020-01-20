@@ -1,10 +1,15 @@
 /* eslint-disable no-useless-escape */
 import model from '../models';
 
-const { Users } = model;
+const { User } = model;
 
 const findUserByEmail = async (email) => {
-  const user = await Users.findOne({ where: { email } });
+  let user;
+  try {
+    user = await User.findOne({ where: { email } });
+  } catch (error) {
+    return user;
+  }
   return user;
 };
 

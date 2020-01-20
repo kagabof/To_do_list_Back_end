@@ -9,27 +9,30 @@ import { hashPasword, comparePassword } from '../helpers/hash';
 import { tokenGenerater } from '../helpers/tokenHelper';
 
 
-const { Users } = model;
+const { User } = model;
 
 const signupResolver = async (parent, args) => {
+  const {
+    firstName, lastName, email, age, role, password, image_url, image_secure_url,
+  } = args;
   if (!validates(args).check) {
     throw new Error('Name, age and email must be complited');
   } else {
-    const check = await checkUserExist(args.email);
+    const check = await checkUserExist(email);
     if (check.exist) {
-      throw new Error(`Email ${args.email} exits in the system!`);
+      throw new Error(`Email ${email} exits in the system!`);
     }
-    const hash = await hashPasword(args.password);
-
+    const hash = await hashPasword(password);
     if (!check.exist) {
-      const data = Users.create({
-        name: args.name,
-        email: args.email,
-        age: args.age,
-        role: args.role,
+      const data = User.create({
+        firstName,
+        lastName,
+        email,
+        age,
+        role,
         password: hash,
-        image_url: args.image_url,
-        image_secure_url: args.image_secure_url,
+        image_url,
+        image_secure_url,
       });
 
       if (!data) {
@@ -41,7 +44,7 @@ const signupResolver = async (parent, args) => {
 };
 
 const getUserByIdResolver = async (parent, args) => {
-  const users = await Users.findByPk(args.id);
+  const users = await User.findByPk(args.id);
   if (!users) {
     throw new Error('No user found');
   }
@@ -49,7 +52,7 @@ const getUserByIdResolver = async (parent, args) => {
 };
 
 const getAllUsersResolver = async () => {
-  const users = await Users.findAll();
+  const users = await User.findAll();
   if (!users.length) {
     throw new Error('No user found');
   }
@@ -57,14 +60,14 @@ const getAllUsersResolver = async () => {
 };
 
 const signinResolver = async (parent, args) => {
-  const user = (await checkUserExist(args.email));
+  const user = await checkUserExist(args.email);
   const passwordCheck = (user.exist && args.password)
     ? comparePassword(args.password, user.User.dataValues.password)
     : false;
 
   if (user.exist && passwordCheck) {
     const {
-      email, image_secure_url, image_url, role, id, name,
+      email, image_secure_url, image_url, role, id, firstName,
     } = user.User.dataValues;
     const token = await tokenGenerater({
       email,
@@ -75,7 +78,7 @@ const signinResolver = async (parent, args) => {
     });
 
     return {
-      name,
+      firstName,
       token,
     };
   }
