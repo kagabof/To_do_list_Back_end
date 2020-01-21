@@ -1,43 +1,41 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const toDo = sequelize.define('toDo', {
+  const toDoList = sequelize.define('toDoList', {
+    type: {
+      type: DataTypes.STRING,
+    },
     title: {
       type: DataTypes.STRING,
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
-    location: {
-      type: DataTypes.STRING,
-    },
-    startTime: {
-      type: DataTypes.TIME,
-    },
-    toDoListId: {
+    userId: {
       allowNull: false,
       type: DataTypes.INTEGER,
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
       references: {
-        model: 'toDoLists',
+        model: 'Users',
         key: 'id',
       },
     },
-    updatedTime: {
-      type: DataTypes.TIME,
+    createdAt: {
+      type: DataTypes.DATE,
     },
-    endTime: {
-      type: DataTypes.TIME,
+    updatedAt: {
+      type: DataTypes.DATE,
     },
   }, {});
-  toDo.associate = function(models) {
-    toDo.belongsTo(models.toDoList,
+  toDoList.associate = function(models) {
+    // associations can be defined here
+    toDoList.belongsTo(models.User,
       {
-        foreignkey: 'toDoListId',
+        foreignkey: 'userId',
         targetkey: 'id',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       });
   };
-  return toDo;
+  return toDoList;
 };
