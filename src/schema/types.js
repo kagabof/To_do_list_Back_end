@@ -34,6 +34,7 @@ const UserType = new GraphQLObjectType({
 const ToDoListType = new GraphQLObjectType({
   name: 'ToDoList',
   fields: () => ({
+    id: { type: GraphQLString },
     type: { type: GraphQLString },
     title: { type: GraphQLString },
     description: { type: GraphQLString },
@@ -42,8 +43,25 @@ const ToDoListType = new GraphQLObjectType({
   }),
 });
 
+const ToDoType = new GraphQLObjectType({
+  name: 'ToDo',
+  fields: () => ({
+    id: { type: GraphQLString },
+    title: { type: GraphQLString },
+    description: { type: GraphQLString },
+    location: { type: GraphQLString },
+    toDoListId: { type: GraphQLString },
+    updatedTime: { type: GraphQLString },
+    endTime: { type: GraphQLString },
+    updatedAt: { type: GraphQLString },
+    createdAt: { type: GraphQLString },
+    startTime: { type: GraphQLString },
+  }),
+});
+
 export {
   AuthPayload,
   UserType,
   ToDoListType,
+  ToDoType,
 };

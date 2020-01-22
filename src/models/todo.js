@@ -23,7 +23,10 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id',
       },
     },
-    updatedTime: {
+    createdAt: {
+      type: DataTypes.TIME,
+    },
+    updatedAt: {
       type: DataTypes.TIME,
     },
     endTime: {

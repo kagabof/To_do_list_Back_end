@@ -29,11 +29,14 @@ module.exports = {
         key: 'id',
       },
     },
-    updatedTime: {
-      type: Sequelize.TIME,
+    createdAt: {
+      type: Sequelize.DATE,
+    },
+    updatedAt: {
+      type: Sequelize.DATE,
     },
     endTime: {
-      type: Sequelize.TIME,
+      type: Sequelize.DATE,
     },
   }),
   down: (queryInterface) => queryInterface.dropTable('toDos'),

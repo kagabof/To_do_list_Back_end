@@ -6,14 +6,19 @@ import token from './signupTest';
 
 
 chai.should();
+let id;
+const listId = {
+  listId: id,
+};
 
 describe('GraphQL to do list test', () => {
   it('should create to do list', (done) => {
     request(app).post('/')
       .set('Authorization', `Bearer ${token.token}`)
-      .send({ query: 'mutation{CreateToDoList(type: "list", title: "setup to do project"){type title }}' })
+      .send({ query: 'mutation{CreateToDoList(type: "list", title: "setup to do project"){type title id}}' })
       .expect(200)
       .end((err, res) => {
+        listId.id = res.body.data.CreateToDoList.id;
         res.body.data.CreateToDoList.type.should.equal('list');
         done();
       });
@@ -38,3 +43,5 @@ describe('GraphQL to do list test', () => {
       });
   });
 });
+
+export default listId;

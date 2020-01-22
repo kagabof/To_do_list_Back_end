@@ -127,7 +127,7 @@ describe('GraphQL', () => {
 
   it('should find an array', (done) => {
     request(app).post('/')
-      .send({ query: '{ Users { firstName age email } }' })
+      .send({ query: '{ Users { firstName age email id } }' })
       .expect(200)
       .end((err, res) => {
         res.body.data.Users.length.should.equal(1);
