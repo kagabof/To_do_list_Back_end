@@ -7,11 +7,13 @@ import {
 import {
   UserType,
   ToDoListType,
+  ToDoType,
 } from './types';
 import {
   signupResolver,
 } from '../resolvers/UserResolver';
 import createToDoListResolver from '../resolvers/TodoListResolver';
+import CreateToDo from '../resolvers/ToDoResolver';
 
 
 const Mutation = new GraphQLObjectType({
@@ -42,6 +44,21 @@ const Mutation = new GraphQLObjectType({
       },
       resolve(parent, args, req) {
         return createToDoListResolver(parent, args, req);
+      },
+    },
+    CreateToDo: {
+      type: ToDoType,
+      args: {
+        title: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: GraphQLString },
+        location: { type: GraphQLString },
+        toDoListId: { type: new GraphQLNonNull(GraphQLInt) },
+        endTime: { type: GraphQLString },
+        startTime: { type: GraphQLString },
+      },
+      description: 'It is an array of of to do',
+      resolve(parent, args, req) {
+        return CreateToDo(parent, args, req);
       },
     },
   }),
