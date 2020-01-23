@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql';
 import model from '../models';
 
 
@@ -26,5 +27,39 @@ const createToDoListResolver = async (params, args, req) => {
   throw new Error('Todo list is not created!');
 };
 
+const GetAllToDoListResolver = async (req) => {
+  if (!req.userId) {
+    throw new GraphQLError('Please signup or signin for creating a to do list!');
+  }
 
-export default createToDoListResolver;
+  try {
+    const data = await toDoList.findAll();
+    return data && data;
+  } catch (error) {
+    throw new GraphQLError('Server Error');
+  }
+};
+
+const GetAllToDoListByUseId = async (userId, req) => {
+  if (!req.userId) {
+    throw new GraphQLError('Please signup or signin for creating a to do list!');
+  }
+
+  try {
+    const data = await toDoList.findAll({
+      where: {
+        userId,
+      },
+    });
+    return data && data;
+  } catch (error) {
+    throw new GraphQLError('Server Error');
+  }
+};
+
+
+export {
+  createToDoListResolver,
+  GetAllToDoListResolver,
+  GetAllToDoListByUseId,
+};

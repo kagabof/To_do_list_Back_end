@@ -35,12 +35,12 @@ describe('GraphQL', () => {
       });
   });
 
-  it('should find empty array', (done) => {
+  it('should find an array', (done) => {
     request(app).post('/')
       .send({ query: '{ Users {firstName age email } }' })
       .expect(200)
       .end((err, res) => {
-        res.body.errors[0].message.should.equal('No user found');
+        res.body.data.Users.should.be.a('Array');
         done();
       });
   });
@@ -130,7 +130,7 @@ describe('GraphQL', () => {
       .send({ query: '{ Users { firstName age email id } }' })
       .expect(200)
       .end((err, res) => {
-        res.body.data.Users.length.should.equal(1);
+        res.body.data.Users.length.should.equal(2);
         done();
       });
   });

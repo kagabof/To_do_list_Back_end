@@ -9,7 +9,7 @@ import { hashPasword, comparePassword } from '../helpers/hash';
 import { tokenGenerater } from '../helpers/tokenHelper';
 
 
-const { User } = model;
+const { user } = model;
 
 const signupResolver = async (parent, args) => {
   const {
@@ -24,7 +24,7 @@ const signupResolver = async (parent, args) => {
     }
     const hash = await hashPasword(password);
     if (!check.exist) {
-      const data = User.create({
+      const data = user.create({
         firstName,
         lastName,
         email,
@@ -44,7 +44,7 @@ const signupResolver = async (parent, args) => {
 };
 
 const getUserByIdResolver = async (parent, args) => {
-  const users = await User.findByPk(args.id);
+  const users = await user.findByPk(args.id);
   if (!users) {
     throw new Error('No user found');
   }
@@ -52,7 +52,7 @@ const getUserByIdResolver = async (parent, args) => {
 };
 
 const getAllUsersResolver = async () => {
-  const users = await User.findAll();
+  const users = await user.findAll();
   if (!users.length) {
     throw new Error('No user found');
   }
@@ -60,15 +60,14 @@ const getAllUsersResolver = async () => {
 };
 
 const signinResolver = async (parent, args) => {
-  const user = await checkUserExist(args.email);
-  const passwordCheck = (user.exist && args.password)
-    ? comparePassword(args.password, user.User.dataValues.password)
-    : false;
-
-  if (user.exist && passwordCheck) {
+  const User = await checkUserExist(args.email);
+  const passwordCheck = await ((User.exist && args.password)
+    ? comparePassword(args.password, User.User.dataValues.password)
+    : false);
+  if (User.exist && passwordCheck) {
     const {
       email, image_secure_url, image_url, role, id, firstName,
-    } = user.User.dataValues;
+    } = User.User.dataValues;
     const token = await tokenGenerater({
       email,
       role,

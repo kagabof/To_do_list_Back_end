@@ -20,7 +20,9 @@ app.use('/', graphqlHTTP({
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log('server listen on http://localhost:3000/');
+  console.log(process.env.NODE_ENV === 'staging'
+    ? 'process.env.server listen on https://back-end-to-do-list.herokuapp.com/'
+    : `process.env.server listen on http://localhost: ${port}/`);
 });
 
 export default app;

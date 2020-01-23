@@ -29,4 +29,38 @@ const CreateToDo = async (parent, args, req) => {
   }
 };
 
-export default CreateToDo;
+const GetAllToDoResolver = async (req) => {
+  if (!req.userId) {
+    throw new GraphQLError('Please signup or signin for creating a to do list!');
+  }
+
+  try {
+    const data = await toDo.findAll();
+    return data && data;
+  } catch (error) {
+    throw new GraphQLError('Server Error');
+  }
+};
+
+const GetAllToDoByListId = async (toDoListId, req) => {
+  if (!req.userId) {
+    throw new GraphQLError('Please signup or signin for creating a to do list!');
+  }
+
+  try {
+    const data = await toDo.findAll({
+      where: {
+        toDoListId,
+      },
+    });
+    return data && data;
+  } catch (error) {
+    throw new GraphQLError('Server Error');
+  }
+};
+
+export {
+  CreateToDo,
+  GetAllToDoResolver,
+  GetAllToDoByListId,
+};

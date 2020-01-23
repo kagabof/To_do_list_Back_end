@@ -15,6 +15,7 @@ export default async (req, res, next) => {
     return next();
   }
   req.isAuth = true;
+  req.role = decoded.role;
   req.userId = decoded.id;
   return next();
 };

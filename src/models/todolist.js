@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
       references: {
-        model: 'Users',
+        model: 'user',
         key: 'id',
       },
     },
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   toDoList.associate = function(models) {
     // associations can be defined here
-    toDoList.belongsTo(models.User,
+    toDoList.belongsTo(models.user,
       {
         foreignkey: 'userId',
         targetkey: 'id',

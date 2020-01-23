@@ -12,8 +12,8 @@ import {
 import {
   signupResolver,
 } from '../resolvers/UserResolver';
-import createToDoListResolver from '../resolvers/TodoListResolver';
-import CreateToDo from '../resolvers/ToDoResolver';
+import { createToDoListResolver } from '../resolvers/TodoListResolver';
+import { CreateToDo } from '../resolvers/ToDoResolver';
 
 
 const Mutation = new GraphQLObjectType({

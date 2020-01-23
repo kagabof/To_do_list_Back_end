@@ -1,23 +1,23 @@
 /* eslint-disable no-useless-escape */
 import model from '../models';
 
-const { User } = model;
+const { user } = model;
 
 const findUserByEmail = async (email) => {
-  let user;
+  let User;
   try {
-    user = await User.findOne({ where: { email } });
+    User = await user.findOne({ where: { email } });
   } catch (error) {
-    return user;
+    return User;
   }
-  return user;
+  return User;
 };
 
 const checkUserExist = async (email) => {
-  const user = await findUserByEmail(email);
+  const User = await findUserByEmail(email);
   return {
-    exist: !!user,
-    User: user || null,
+    exist: !!User,
+    User: User || null,
   };
 };
 const passwordValidation = (password) => {

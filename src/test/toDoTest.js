@@ -101,4 +101,83 @@ describe('GraphQL to do test', () => {
         done();
       });
   });
+
+  it('should find an all users will all todo list and to do', (done) => {
+    request(app).post('/')
+      .set('Authorization', `Bearer ${token.token}`)
+      .send({
+        query: `{
+        Users{
+          id
+          firstName
+          age
+          email
+          createdAt
+          toDoList{
+            id
+            type
+            title
+            toDo{
+              title
+              id
+              description
+              location
+            }
+          }
+        }
+      }`,
+      })
+      .expect(200)
+      .end((err, res) => {
+        res.body
+          .data.Users[1]
+          .toDoList[0].toDo[0]
+          .title.should.equal('meeting');
+        done();
+      });
+  });
+
+  it('should find all todo list', (done) => {
+    request(app).post('/')
+      .set('Authorization', `Bearer ${token.token}`)
+      .send({
+        query: `{
+          GetAllToDo{
+            id
+            title
+            description
+            location
+            toDoListId
+          }
+        }`,
+      })
+      .expect(200)
+      .end((err, res) => {
+        res.body.data.GetAllToDo[0].id
+          .should.equal('1');
+        done();
+      });
+  });
+
+  it('should find all todo', (done) => {
+    request(app).post('/')
+      .set('Authorization', `Bearer ${token.token}`)
+      .send({
+        query: `{
+          GetAllToDoList{
+            title
+            type
+            toDo{
+                title
+            }
+          }
+        }`,
+      })
+      .expect(200)
+      .end((err, res) => {
+        res.body.data.GetAllToDoList[0].toDo[0].title
+          .should.equal('meeting');
+        done();
+      });
+  });
 });

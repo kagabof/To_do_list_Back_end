@@ -4,12 +4,16 @@ import {
   GraphQLID,
   GraphQLList,
 } from 'graphql';
-import { UserType, AuthPayload } from './types';
+import {
+  UserType, AuthPayload, ToDoListType, ToDoType,
+} from './types';
 import {
   getUserByIdResolver,
   getAllUsersResolver,
   signinResolver,
 } from '../resolvers/UserResolver';
+import { GetAllToDoListResolver } from '../resolvers/TodoListResolver';
+import { GetAllToDoResolver } from '../resolvers/ToDoResolver';
 
 
 const RootQuery = new GraphQLObjectType({
@@ -38,6 +42,18 @@ const RootQuery = new GraphQLObjectType({
       },
       resolve(parent, args) {
         return signinResolver(parent, args);
+      },
+    },
+    GetAllToDoList: {
+      type: new GraphQLList(ToDoListType),
+      resolve(parent, args, req) {
+        return GetAllToDoListResolver(req);
+      },
+    },
+    GetAllToDo: {
+      type: new GraphQLList(ToDoType),
+      resolve(parent, args, req) {
+        return GetAllToDoResolver(req);
       },
     },
   }),
