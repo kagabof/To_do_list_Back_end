@@ -9,6 +9,7 @@ import {
 const AuthPayload = new GraphQLObjectType({
   name: 'Auth',
   fields: () => ({
+    id: { type: GraphQLID },
     firstName: { type: GraphQLString },
     token: { type: GraphQLString },
   }),

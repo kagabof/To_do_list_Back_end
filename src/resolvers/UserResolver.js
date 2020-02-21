@@ -78,6 +78,7 @@ const signinResolver = async (parent, args) => {
     });
 
     return {
+      id,
       firstName,
       token,
     };
